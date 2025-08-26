@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home</title>
+    <link href="/index.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="title">
+        <h1>20 Available Recipes</h1>
+    </div>
+
+    <div class="recipe-list">
+        <dl>
+        
+            <dt><a href=company-chicken-wings>Company Chicken Wings</a></dt>
+            <dd>(<i>90 minutes</i>)</dd>
+        
+            <dt><a href=24-hour-salad>24-hour Salad</a></dt>
+            <dd>(<i>1440 minutes</i>)</dd>
+        
+            <dt><a href=butter-tarts>Butter Tarts</a></dt>
+            <dd>(<i>20 minutes</i>)</dd>
+        
+            <dt><a href=5-minute-fudge>5-minute Fudge</a></dt>
+            <dd>(<i>10 minutes</i>)</dd>
+        
+            <dt><a href=creamy-chocolate-rum-truffles>Creamy Chocolate Rum Truffles</a></dt>
+            <dd>(<i>90 minutes</i>)</dd>
+        
+            <dt><a href=japanese-cabbage-salad>Japanese Cabbage Salad</a></dt>
+            <dd>(<i>30 minutes</i>)</dd>
+        
+            <dt><a href=spinich-dip>Spinich Dip</a></dt>
+            <dd>(<i>0 minutes</i>)</dd>
+        
+            <dt><a href=dill-dip>Dill Dip</a></dt>
+            <dd>(<i>10 minutes</i>)</dd>
+        
+            <dt><a href=fondue-teriyaki-sauce>Fondue Teriyaki Sauce</a></dt>
+            <dd>(<i>5 minutes</i>)</dd>
+        
+            <dt><a href=fondue-barbecue-sauce>Fondue Barbecue Sauce</a></dt>
+            <dd>(<i>5 minutes</i>)</dd>
+        
+            <dt><a href=pastry>Pastry</a></dt>
+            <dd>(<i>90 minutes</i>)</dd>
+        
+            <dt><a href=fondue-beer-batter>Fondue Beer Batter</a></dt>
+            <dd>(<i>5 minutes</i>)</dd>
+        
+            <dt><a href=rice-krispie-squares>Rice Krispie Squares</a></dt>
+            <dd>(<i>30 minutes</i>)</dd>
+        
+            <dt><a href=hasty-pudding>Hasty Pudding</a></dt>
+            <dd>(<i>90 minutes</i>)</dd>
+        
+            <dt><a href=cheese-fondue>Cheese Fondue</a></dt>
+            <dd>(<i>45 minutes</i>)</dd>
+        
+            <dt><a href=seasoned-flour>Seasoned Flour</a></dt>
+            <dd>(<i>5 minutes</i>)</dd>
+        
+            <dt><a href=cherry-almond-nanaimo-bars>Cherry Almond Nanaimo Bars</a></dt>
+            <dd>(<i>180 minutes</i>)</dd>
+        
+            <dt><a href=fruit-dip>Fruit Dip</a></dt>
+            <dd>(<i>10 minutes</i>)</dd>
+        
+            <dt><a href=sweet-rice-krispie-squares>Sweet Rice Krispie Squares</a></dt>
+            <dd>(<i>240 minutes</i>)</dd>
+        
+            <dt><a href=hot-fudge-sauce>Hot Fudge Sauce</a></dt>
+            <dd>(<i>15 minutes</i>)</dd>
+        
+        </dl>
+    </div>
+
+    <div class="new-recipe-form">
+        <h2>Add recipe</h2>
+        <form id="new-recipe">
+            <div class="form-group">
+                <label for="recipe-name">Recipe Name</label>
+                <input type="text" id="recipe-name" placeholder="A fancy and unique recipe name" required>
+            </div>
+            <div class="form-group">
+                <label>Ingredient</label>
+                <div class="ingredients-container" id="all-ingredients">
+                    
+                </div>
+                <button type="button" class="add-button" id="add-ingredient-button">
+                    <i>+</i> Add Ingredient
+                </button>
+            </div>
+            <div class="form-group">
+                <label>Instructions</label>
+                <div class="instructions-container" id="all-instructions">
+                    
+                </div>
+                <button type="button" class="add-button" id="add-instruction-button">
+                    <i>+</i> Add Step
+                </button>
+            </div>
+            <div class="form-group">
+                <label for="recipe-cooktime">Creation time</label>
+                <input type="number" id="recipe-cooktime" placeholder="Total creation time in minutes" required/>
+            </div>
+            <button type="submit" class="submit-button">Add Recipe</button>
+        </form>
+    </div>
+
+    <script src="./addRecipeForm.js" type="text/javascript" defer></script>
+</body>
+
+</html>
+

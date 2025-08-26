@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home</title>
+    <link href="/index.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="title">
+        <h1>{{ .Recipes | len }} Available Recipes</h1>
+    </div>
+
+    <div class="recipe-list">
+        <dl>
+        {{ range .Recipes }}
+            <dt><a href={{ replace .Name " " "-" | lower }}>{{ .Name }}</a></dt>
+            <dd>(<i>{{ .CookTime }} minutes</i>)</dd>
+        {{ end }}
+        </dl>
+    </div>
+
+    <div class="new-recipe-form">
+        <h2>Add recipe</h2>
+        <form id="new-recipe">
+            <div class="form-group">
+                <label for="recipe-name">Recipe Name</label>
+                <input type="text" id="recipe-name" placeholder="A fancy and unique recipe name" required>
+            </div>
+            <div class="form-group">
+                <label>Ingredient</label>
+                <div class="ingredients-container" id="all-ingredients">
+                    <!-- This will be dynamically-filled -->
+                </div>
+                <button type="button" class="add-button" id="add-ingredient-button">
+                    <i>+</i> Add Ingredient
+                </button>
+            </div>
+            <div class="form-group">
+                <label>Instructions</label>
+                <div class="instructions-container" id="all-instructions">
+                    <!-- This will be dynamically-filled -->
+                </div>
+                <button type="button" class="add-button" id="add-instruction-button">
+                    <i>+</i> Add Step
+                </button>
+            </div>
+            <div class="form-group">
+                <label for="recipe-cooktime">Creation time</label>
+                <input type="number" id="recipe-cooktime" placeholder="Total creation time in minutes" required/>
+            </div>
+            <button type="submit" class="submit-button">Add Recipe</button>
+        </form>
+    </div>
+
+    <script src="./addRecipeForm.js" type="text/javascript" defer></script>
+</body>
+
+</html>
+
