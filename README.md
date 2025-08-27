@@ -23,11 +23,11 @@ This code relies on a JSON file with the format,
 {
     "recipes": [
         {
-            "name": STRING,
-            "ingredients": [STRING...],
-            "instructions": [STRING],
-            "cook time": NUMBER
-        }...
+            "name": "STRING",
+            "ingredients": ["[]STRING..."],
+            "instructions": ["[]STRING..."],
+            "cook time": "NUMBER"
+        }
     ]
 }
 ```
