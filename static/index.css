@@ -101,6 +101,21 @@ img {
     border-radius: 6px;
 }
 
+.banner {
+    background: linear-gradient(90deg, #6bff6b, 0%, #8eff8e, 100%);
+    color: white;
+    text-align: center;
+    display: none;
+    position: relative;
+    transform: translateY(-100%);
+    transition: transform 0.5s ease-out;
+}
+
+.banner.show {
+    display: block;
+    transform: translateY(0);
+}
+
 .recipe-list {
     margin-top: 10px;
     padding-top: 5px;
