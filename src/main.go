@@ -16,11 +16,21 @@ type Recipe struct {
     Name          string    `json:"name"`
     Ingredients   []string  `json:"ingredients"`
     Instructions  []string  `json:"instructions"`
-    CookTime      int       `json:"cook time"`
+    CookTime      int       `json:"cook-time"`
 }
 
 type Recipes struct {
     Recipes  []Recipe  `json:"recipes"`
+}
+
+func (recipes *Recipes) append(newRecipe Recipe) bool {
+    for _, r := range recipes.Recipes {
+        if r.Name == newRecipe.Name {
+            return false
+        }
+    }
+    recipes.Recipes = append(recipes.Recipes, newRecipe)
+    return true
 }
 
 func replace(input, old, new string) string {
@@ -46,12 +56,7 @@ func main() {
         recipes: recipes,
     }
 
-    err = clearDir("./public")
-    if err != nil {
-        panic(err)
-    }
-
-    err = apiCfg.writeHTML()
+    err = apiCfg.resetHTML()
     if err != nil {
         panic(err)
     }
@@ -59,8 +64,8 @@ func main() {
     mux := http.NewServeMux()
 
     fs := http.FileServer(http.Dir("./public"))
-    mux.Handle("GET /", fs)
-    mux.HandleFunc("POST /", apiCfg.createRecipeHandler)
+    mux.Handle("GET /", allowCreate(fs))
+    mux.HandleFunc("POST /create", apiCfg.createRecipeHandler)
     mux.HandleFunc("POST /{recipe}", apiCfg.editRecipeHandler)
 
     port := "8080"
@@ -71,6 +76,17 @@ func main() {
 
     fmt.Printf("Serving recipes on port %s\n", port)
     log.Fatal(server.ListenAndServe())
+}
+
+func allowCreate(next http.Handler) http.Handler {
+    return http.HandlerFunc(
+        func(w http.ResponseWriter, r *http.Request) {
+            w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080/create")
+            w.Header().Set("Access-Control-Allow-Methods", "POST")
+            w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+            next.ServeHTTP(w, r)
+        },
+    )
 }
 
 func clearDir(dir string) error {
@@ -169,6 +185,20 @@ func (cfg apiConfig) writeHTML() error {
     return nil
 }
 
+func (cfg apiConfig) resetHTML() error {
+    err := clearDir("./public")
+    if err != nil {
+        return err
+    }
+
+    err = cfg.writeHTML()
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
 func (cfg *apiConfig) createRecipeHandler(w http.ResponseWriter, r *http.Request) {
     decoder := json.NewDecoder(r.Body)
     newRecipe := &Recipe{}
@@ -176,28 +206,63 @@ func (cfg *apiConfig) createRecipeHandler(w http.ResponseWriter, r *http.Request
     if err != nil {
         respondWithError(
             w,
-            http.StatusInternalServerError,
+            http.StatusBadRequest,
             "error decoding JSON of new recipe.",
             err,
         )
+        return
     }
 
-    cfg.recipes.Recipes = append(cfg.recipes.Recipes, *newRecipe)
+    if newRecipe.Name == "" {
+        respondWithError(
+            w,
+            http.StatusBadRequest,
+            "empty recipe submission",
+            nil,
+        )
+        return
+    }
+
+    ok := cfg.recipes.append(*newRecipe)
+    if !ok {
+        respondWithError(
+            w,
+            http.StatusBadRequest,
+            fmt.Sprintf("recipe %s already exists", newRecipe.Name),
+            nil,
+        )
+        return
+    }
+
     err = cfg.writeRecipes()
     if err != nil {
         respondWithError(
             w,
-            http.StatusInternalServerError,
+            http.StatusBadRequest,
             "unable to save new recipe",
             err,
         )
+        return
     }
 
-    respondWithJSON(w, http.StatusOK, nil)
+    err = cfg.resetHTML()
+    if err != nil {
+        respondWithError(
+            w,
+            http.StatusInternalServerError,
+            "unable to reset HTML",
+            err,
+        )
+        return
+    }
+
+    fmt.Println("Created new recipe:", *newRecipe)
+
+    respondWithJSON(w, http.StatusOK, newRecipe)
 }
 
 func (cfg apiConfig) writeRecipes() error {
-    recipeBytes, err := json.Marshal(cfg.recipes)
+    recipeBytes, err := json.MarshalIndent(cfg.recipes, "", "    ")
     if err != nil {
         return err
     }

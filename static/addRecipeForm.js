@@ -1,4 +1,15 @@
-document.addEventListener("DOMContentLoaded", function() {
+window.addEventListener("DOMContentLoaded", function() {
+    if (sessionStorage.getItem("showNotification") == "true") {
+        const message = sessionStorage.getItem("notificationMessage");
+        const color = sessionStorage.getItem("notificationColor");
+        if (message != "") {
+            showNotification(message, color);
+        }
+        sessionStorage.removeItem("showNotification");
+        sessionStorage.removeItem("notificationMessage");
+        sessionStorage.removeItem("notificationColor");
+    }
+
     const ingredientContainer = document.getElementById("all-ingredients");
     const addIngredientButton = document.getElementById("add-ingredient-button");
     const instructionContainer = document.getElementById("all-instructions");
@@ -50,8 +61,9 @@ document.addEventListener("DOMContentLoaded", function() {
     addInstructionButton.addEventListener("click", addInstructionInput);
 
     async function submitRecipe(recipe) {
+        console.log(recipe)
         try {
-            const response = await fetch(":8080", {
+            const response = await fetch("http://localhost:8080/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -62,17 +74,25 @@ document.addEventListener("DOMContentLoaded", function() {
                 throw new Error("recipe submission failed");
             }
             const result = await response.json();
-            console.log("recipe successfully created")
+            // console.log("recipe successfully created")
             return result;
         } catch (error) {
-            console.error("Error in recipe submission:", error);
+            // console.error("Error in recipe submission:", error);
             throw error;
         }
     }
 
-    function showBanner(message) {
+    function setNotification(message, color) {
+        sessionStorage.setItem("showNotification", "true");
+        sessionStorage.setItem("notificationMessage", message);
+        sessionStorage.setItem("notificationColor", color);
+        window.location.reload();
+    }
+
+    function showNotification(message, color) {
         banner = document.getElementById("notification-banner");
         bannerMessage = document.getElementById("notification-message");
+        banner.style.background = color;
         bannerMessage.textContent = message;
         banner.classList.add("show");
         setTimeout(() => {
@@ -84,10 +104,9 @@ document.addEventListener("DOMContentLoaded", function() {
         e.preventDefault();
 
         const recipeName = document.getElementById("recipe-name");
-        const recipeIngredients = document.querySelectorAll(".ingredint-input");
+        const recipeIngredients = document.querySelectorAll(".ingredient-input");
         const recipeInstructions = document.querySelectorAll(".instruction-input");
         const recipeCooktime = document.getElementById("recipe-cooktime");
-        const banner = document.getElementById("notification-banner");
 
         const ingredients = [];
         recipeIngredients.forEach(input => {
@@ -104,23 +123,21 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         const newRecipe = {
-            recipeName: recipeName.value.trim(),
-            ingredients: ingredients,
-            instructions: instructions,
-            cookTime: recipeCooktime.value
+            "name": recipeName.value.trim(),
+            "ingredients": ingredients,
+            "instructions": instructions,
+            "cook-time": parseInt(recipeCooktime.value)
         }
 
         submitRecipe(newRecipe)
             .then(data => {
-                banner.style.background = "linear-gradient(90deg, #2bff2b, 0%, #4eff4e, 100%)";
+                setNotification(`Recipe ${newRecipe.name} created!`, "green");
                 console.log(data);
             })
             .catch(error => {
-                banner.style.background = "linear-gradient(90deg, #ff2b2b, 0%, #ff4e4e, 100%)";
+                setNotification(`Failed to create recipe...`, "red");
                 console.error(error);
             });
-
-        showBanner(`Recipe ${recipeName.value.trim()} created!`);
     });
 });
 
