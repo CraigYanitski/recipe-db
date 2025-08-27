@@ -209,9 +209,6 @@ func (cfg apiConfig) writeRecipes() error {
 }
 
 func (cfg *apiConfig) editRecipeHandler(w http.ResponseWriter, r *http.Request) {
-    oldRecipeName, err := r.PathValue("recipe")
-    if err != nil {
-        respondWithError(w, http.StatusBadRequest, "unable to parse recipe name", err)
-    }
+    // oldRecipeName := r.PathValue("recipe")
 }
 
