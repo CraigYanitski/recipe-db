@@ -10,10 +10,6 @@
 </head>
 
 <body>
-    <div class="banner" id="notification-banner">
-        <span id="notification-message">Notification here</span>
-    </div>
-
     <div class="title">
         <h1>{{ .Recipes | len }} Available Recipes</h1>
     </div>
@@ -25,6 +21,10 @@
             <dd>(<i>{{ .CookTime }} minutes</i>)</dd>
         {{ end }}
         </dl>
+    </div>
+
+    <div class="banner" id="notification-banner">
+        <span id="notification-message">Notification here</span>
     </div>
 
     <div class="new-recipe-form">
