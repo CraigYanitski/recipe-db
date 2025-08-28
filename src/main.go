@@ -33,6 +33,25 @@ func (recipes *Recipes) append(newRecipe Recipe) bool {
     return true
 }
 
+func (recipes *Recipes) find(recipe string) *Recipe {
+    for _, r := range recipes.Recipes {
+        if strings.ToLower(replace(r.Name, " ", "-")) == recipe {
+            return &r
+        }
+    }
+    return nil
+}
+
+func (recipes *Recipes) remove(recipe string) {
+    for i, r := range recipes.Recipes {
+        if r.Name == recipe {
+            recipes.Recipes = append(recipes.Recipes[:i], recipes.Recipes[i+1:]...)
+            return
+        }
+    }
+    return
+}
+
 func replace(input, old, new string) string {
     return strings.ReplaceAll(input, old, new)
 }
@@ -67,6 +86,7 @@ func main() {
     mux.Handle("GET /", allowCreate(fs))
     mux.HandleFunc("POST /create", apiCfg.createRecipeHandler)
     mux.HandleFunc("POST /{recipe}", apiCfg.editRecipeHandler)
+    mux.Handle("POST /delete/{recipe}", http.HandlerFunc(apiCfg.deleteRecipeHandler))
 
     port := "8080"
     server := http.Server{
@@ -74,7 +94,7 @@ func main() {
         Handler: mux,
     }
 
-    fmt.Printf("Serving recipes on port %s\n", port)
+    log.Printf("Serving recipes on port %s\n", port)
     log.Fatal(server.ListenAndServe())
 }
 
@@ -82,6 +102,17 @@ func allowCreate(next http.Handler) http.Handler {
     return http.HandlerFunc(
         func(w http.ResponseWriter, r *http.Request) {
             w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080/create")
+            w.Header().Set("Access-Control-Allow-Methods", "POST")
+            w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+            next.ServeHTTP(w, r)
+        },
+    )
+}
+
+func allowDelete(next http.Handler) http.Handler {
+    return http.HandlerFunc(
+        func(w http.ResponseWriter, r *http.Request) {
+            w.Header().Set("Access-Control-Allow-Origin", "*")
             w.Header().Set("Access-Control-Allow-Methods", "POST")
             w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
             next.ServeHTTP(w, r)
@@ -124,6 +155,11 @@ func copyFile(src, dst string) error {
 func (cfg apiConfig) writeHTML() error {
     // copy static files
     err := copyFile("./static/addRecipeForm.js", "./public/addRecipeForm.js")
+    if err != nil {
+        panic(err)
+    }
+
+    err = copyFile("./static/deleteRecipeForm.js", "./public/deleteRecipeForm.js")
     if err != nil {
         panic(err)
     }
@@ -186,7 +222,12 @@ func (cfg apiConfig) writeHTML() error {
 }
 
 func (cfg apiConfig) resetHTML() error {
-    err := clearDir("./public")
+    err := cfg.writeRecipes()
+    if err != nil {
+        return err
+    }
+
+    err = clearDir("./public")
     if err != nil {
         return err
     }
@@ -234,17 +275,6 @@ func (cfg *apiConfig) createRecipeHandler(w http.ResponseWriter, r *http.Request
         return
     }
 
-    err = cfg.writeRecipes()
-    if err != nil {
-        respondWithError(
-            w,
-            http.StatusBadRequest,
-            "unable to save new recipe",
-            err,
-        )
-        return
-    }
-
     err = cfg.resetHTML()
     if err != nil {
         respondWithError(
@@ -258,7 +288,7 @@ func (cfg *apiConfig) createRecipeHandler(w http.ResponseWriter, r *http.Request
 
     fmt.Println("Created new recipe:", *newRecipe)
 
-    respondWithJSON(w, http.StatusOK, newRecipe)
+    respondWithJSON(w, http.StatusCreated, newRecipe)
 }
 
 func (cfg apiConfig) writeRecipes() error {
@@ -271,6 +301,38 @@ func (cfg apiConfig) writeRecipes() error {
         return err
     }
     return nil
+}
+
+func (cfg *apiConfig) deleteRecipeHandler(w http.ResponseWriter, r *http.Request) {
+    recipeName := r.PathValue("recipe")
+
+    found := cfg.recipes.find(recipeName)
+    if found == nil {
+        respondWithError(
+            w,
+            http.StatusNotFound,
+            fmt.Sprintf("recipe %s not found", recipeName),
+            nil,
+        )
+        return
+    }
+
+    cfg.recipes.remove(found.Name)
+
+    err := cfg.resetHTML()
+    if err != nil {
+        respondWithError(
+            w,
+            http.StatusInternalServerError,
+            "unable to reset HTML",
+            err,
+        )
+        return
+    }
+
+    fmt.Println("Removed recipe:", found.Name)
+
+    respondWithJSON(w, http.StatusOK, found)
 }
 
 func (cfg *apiConfig) editRecipeHandler(w http.ResponseWriter, r *http.Request) {

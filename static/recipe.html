@@ -10,26 +10,39 @@
 </head>
 
 <body>
-<h1>{{ .Name }}</h1>
-<p><a href="/">Home</a></p>
-<p><i>Total cook time approx. {{ .CookTime }} minutes</i></p>
-<dl>
-    <dt>Ingredients:</dt>
-    <dd><ul>
-    {{ range .Ingredients }}
-        <li>{{ . }}</li>
-    {{ end }}
-    </ul></dd>
-    <dt>Instructions:</dt>
-    <dd><ul>
-    {{ range .Instructions }}
-        <li>{{ . }}</li>
-    {{ end }}
-    </ul></dd>
-    <dt>Cook time</dt>
-    <dd><i>approx. {{ .CookTime }} minutes</i></dd>
-</dl>
+    <div class="title">
+        <h1>{{ .Name }}</h1>
+        <p id="recipe-links">
+            <a href="/">Home</a>
+            <span>$nbsp;</span>
+            <form id="delete-form">
+                <button type="submit" class="button-link" id="delete-recipe-button">Delete</button>
+            </form>
+        </p>
+        <p><i>Total cook time approx. {{ .CookTime }} minutes</i></p>
+    </div>
+
+    <div class="recipe-list">
+        <dl>
+            <dt>Ingredients:</dt>
+            <dd><ul>
+            {{ range .Ingredients }}
+                <li>{{ . }}</li>
+            {{ end }}
+            </ul></dd>
+            <dt>Instructions:</dt>
+            <dd><ul>
+            {{ range .Instructions }}
+                <li>{{ . }}</li>
+            {{ end }}
+            </ul></dd>
+            <dt>Cook time</dt>
+            <dd><i>approx. {{ .CookTime }} minutes</i></dd>
+        </dl>
+    </div>
 </body>
+
+<script src="../deleteRecipeForm.js" type="text/javascript" defer></script>
 
 </html>
 
