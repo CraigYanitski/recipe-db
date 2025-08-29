@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -222,6 +223,12 @@ func (cfg apiConfig) writeHTML() error {
 }
 
 func (cfg apiConfig) resetHTML() error {
+    sort.Slice(cfg.recipes.Recipes, func(i, j int) bool {
+        first := strings.ToLower(replace(cfg.recipes.Recipes[i].Name, " ", "-"))
+        second := strings.ToLower(replace(cfg.recipes.Recipes[j].Name, " ", "-"))
+        return first < second
+    })
+
     err := cfg.writeRecipes()
     if err != nil {
         return err
