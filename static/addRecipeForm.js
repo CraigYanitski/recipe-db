@@ -61,9 +61,9 @@ window.addEventListener("DOMContentLoaded", function() {
     addInstructionButton.addEventListener("click", addInstructionInput);
 
     async function submitRecipe(recipe) {
-        console.log(recipe)
+        const url = `http://${window.location.host}/create`;
         try {
-            const response = await fetch("http://localhost:8080/create", {
+            const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
