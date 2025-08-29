@@ -12,10 +12,15 @@
 <body>
     <div class="title">
         <h1>{{ .Recipes | len }} Available Recipes</h1>
+        <p id="recipe-links">
+            <form id="reload-form">
+                <button type="submit" class="button-link" id="refresh-recipe-list">Reload</button>
+            </form>
+        </p>
     </div>
 
     <div class="recipe-list">
-        <dl>
+        <dl id="recipe-times">
         {{ range .Recipes }}
             <dt><a href={{ replace .Name " " "-" | lower }}>{{ .Name }}</a></dt>
             <dd>(<i>{{ .CookTime }} minutes</i>)</dd>
