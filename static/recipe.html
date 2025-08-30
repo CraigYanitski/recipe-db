@@ -12,17 +12,13 @@
 <body>
     <div class="title">
         <h1>{{ .Name }}</h1>
-        <p id="recipe-links">
-            <a href="/">Home</a>
-            <span>&nbsp;</span>
-            <form id="delete-form">
-                <button type="submit" class="button-link" id="delete-recipe-button">Delete</button>
-            </form>
-            <span>&nbsp;</span>
-            <form id="edit-form">
-                <button type="submit" class="button-link" id="edit-recipe-button">Edit</button>
-            </form>
-        </p>
+        <form class="recipe-links" id="recipe-link-form">
+            <input type="button" onclick="window.location.href='/'" class="button-link" value="Home"/>
+            <span style="flex-grow: 1;">&nbsp;</span>
+            <input type="button" onclick="editRecipe()" class="button-link" value="Edit"/>
+            <span style="flex-grow: 1;">&nbsp;</span>
+            <input type="button" onclick="deleteRecipe()" class="button-link" value="Delete"/>
+        </form>
         <p><i>Total cook time approx. {{ .CookTime }} minutes</i></p>
     </div>
 

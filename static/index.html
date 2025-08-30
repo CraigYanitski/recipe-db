@@ -12,11 +12,10 @@
 <body>
     <div class="title">
         <h1>{{ .Recipes | len }} Available Recipes</h1>
-        <p id="recipe-links">
-            <form id="reload-form">
-                <button type="submit" class="button-link" id="refresh-recipe-list">Reload</button>
-            </form>
-        </p>
+        <form class="recipe-links" id="recipe-link-form">
+            <button type="home" onclick="window.location.href='/'" class="button-link">Reload</button>
+            <span style="flex-grow: 1;">&nbsp;</span>
+        </form>
     </div>
 
     <div class="recipe-list">

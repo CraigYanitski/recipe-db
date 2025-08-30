@@ -267,12 +267,17 @@ input[type="number"]:focus {
     background: #5649c9;
 }
 
-recipe-links {
-    display: inline;
+.title {
+    align-items: center;
+}
+
+.recipe-links {
+    display: flex;
 }
 
 
 .button-link {
+    flex-grow: 1;
     background: none;
     border: none;
     overflow: visible;
@@ -288,3 +293,4 @@ recipe-links {
 .button-link:hover {
     text-decoration: underline;
 }
+
