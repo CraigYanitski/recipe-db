@@ -11,7 +11,7 @@
 
 <body>
     <div class="title">
-        <h1>{{ .Name }}</h1>
+        <h1 id="recipe-name">{{ .Name }}</h1>
         <form class="recipe-links" id="recipe-link-form">
             <input type="button" onclick="window.location.href='/'" class="button-link" value="Home"/>
             <span style="flex-grow: 1;">&nbsp;</span>
@@ -24,20 +24,20 @@
 
     <div class="recipe-list">
         <dl>
-            <dt>Ingredients:</dt>
-            <dd><ul>
+            <dt id="ingredients-term">Ingredients:</dt>
+            <dd id="ingredients-definition"><ul>
             {{ range .Ingredients }}
                 <li>{{ . }}</li>
             {{ end }}
             </ul></dd>
-            <dt>Instructions:</dt>
-            <dd><ul>
+            <dt id="instructions-term">Instructions:</dt>
+            <dd id="instructions-definition"><ul>
             {{ range .Instructions }}
                 <li>{{ . }}</li>
             {{ end }}
             </ul></dd>
-            <dt>Cook time</dt>
-            <dd><i>approx. {{ .CookTime }} minutes</i></dd>
+            <dt id="cook-time-term">Cook time:</dt>
+            <dd id="cook-time-definition"><i>approx. {{ .CookTime }} minutes</i></dd>
         </dl>
     </div>
 </body>
