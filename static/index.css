@@ -21,7 +21,8 @@ h3,
 h4,
 h5,
 h6 {
-    color: #58a6ff;
+    color: #002395;
+    color: #324ab2;
     margin-top: 16px;
     margin-bottom: 16px;
 }
@@ -42,7 +43,7 @@ h6 {
 }
 
 a {
-    color: #58a6ff;
+    color: #b39cd0;
     text-decoration: none;
 }
 
@@ -118,6 +119,7 @@ img {
     padding-top: 5px;
 }
 
+.edit-recipe-form,
 .new-recipe-form {
     margin-top: 30px;
     padding: 20px;
@@ -209,8 +211,8 @@ input[type="number"]:focus {
 }
 
 .remove-button {
-    background: #ff7675;
-    color: white;
+    background: #660001;
+    color: #c9d1d9;
     border: none;
     border-radius: 6px;
     width: 36px;
@@ -224,12 +226,12 @@ input[type="number"]:focus {
 }
 
 .remove-button:hover {
-    background: #ff5e57;
+    background: #761011;
 }
 
 .add-button {
-    background: #00b894;
-    color: white;
+    background: #013221;
+    color: #c9d1d9;
     border: none;
     border-radius: 6px;
     padding: 10px 16px;
@@ -242,7 +244,7 @@ input[type="number"]:focus {
 }
 
 .add-button:hover {
-    background: #00a885;
+    background: #114231;
 }
 
 .add-button i {
@@ -250,8 +252,8 @@ input[type="number"]:focus {
 }
 
 .submit-button {
-    background: #6c5ce7;
-    color: white;
+    background: #360145;
+    color: #c9d1d9;
     border: none;
     border-radius: 6px;
     padding: 14px 24px;
@@ -264,7 +266,7 @@ input[type="number"]:focus {
 }
 
 .submit-button:hover {
-    background: #5649c9;
+    background: #461151;
 }
 
 .title {
@@ -275,15 +277,20 @@ input[type="number"]:focus {
     display: flex;
 }
 
+.button-link-spacer {
+    flex-grow: 0.5;
+}
 
 .button-link {
     flex-grow: 1;
-    background: none;
-    border: none;
     overflow: visible;
-    padding: 0;
     margin: 0;
-    color: #58a6ff;
+    padding: 8px;
+    border: 4px solid #444;
+    border-radius: 24px;
+    background: #20232a;
+    transition: border-color 0.3s;
+    color: #88dadc;
     text-decoration: none;
     cursor: pointer;
     font-size: 16px;
@@ -291,6 +298,8 @@ input[type="number"]:focus {
 }
 
 .button-link:hover {
+    background: #30333a;
+    border-color: #555;
     text-decoration: underline;
 }
 

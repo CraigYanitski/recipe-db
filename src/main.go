@@ -36,16 +36,16 @@ func (recipes *Recipes) append(newRecipe Recipe) bool {
 
 func (recipes *Recipes) find(recipe string) *Recipe {
     for _, r := range recipes.Recipes {
-        if strings.ToLower(replace(r.Name, " ", "-")) == recipe {
+        if replaceAndLower(r.Name, " ", "-") == recipe {
             return &r
         }
     }
     return nil
 }
 
-func (recipes *Recipes) remove(recipe string) {
+func (recipes *Recipes) remove(recipeID string) {
     for i, r := range recipes.Recipes {
-        if r.Name == recipe {
+        if replaceAndLower(r.Name, " ", "-") == recipeID {
             recipes.Recipes = append(recipes.Recipes[:i], recipes.Recipes[i+1:]...)
             return
         }
@@ -53,8 +53,8 @@ func (recipes *Recipes) remove(recipe string) {
     return
 }
 
-func replace(input, old, new string) string {
-    return strings.ReplaceAll(input, old, new)
+func replaceAndLower(input, old, new string) string {
+    return strings.ToLower(strings.ReplaceAll(input, old, new))
 }
 
 type apiConfig struct {
@@ -86,7 +86,7 @@ func main() {
     fs := http.FileServer(http.Dir("./public"))
     mux.Handle("GET /", allowCreate(fs))
     mux.HandleFunc("POST /create", apiCfg.createRecipeHandler)
-    mux.HandleFunc("POST /{recipe}", apiCfg.editRecipeHandler)
+    mux.HandleFunc("POST /edit/{recipe}", apiCfg.editRecipeHandler)
     mux.Handle("POST /delete/{recipe}", http.HandlerFunc(apiCfg.deleteRecipeHandler))
 
     port := "8080"
@@ -186,8 +186,7 @@ func (cfg apiConfig) writeHTML() error {
 
     // write html files
     funcMap := template.FuncMap{
-        "lower": strings.ToLower,
-        "replace": replace,
+        "replace": replaceAndLower,
     }
     // index
     file, err := os.Create("./public/index.html")
@@ -202,7 +201,7 @@ func (cfg apiConfig) writeHTML() error {
     }
     // recipe
     for _, recipe := range cfg.recipes.Recipes {
-        dirname := strings.ToLower(strings.ReplaceAll(recipe.Name, " ", "-"))
+        dirname := replaceAndLower(recipe.Name, " ", "-")
         if err = os.Mkdir("./public/"+dirname, 0700); err != nil {
             return err
         }
@@ -224,8 +223,8 @@ func (cfg apiConfig) writeHTML() error {
 
 func (cfg apiConfig) resetHTML() error {
     sort.Slice(cfg.recipes.Recipes, func(i, j int) bool {
-        first := strings.ToLower(replace(cfg.recipes.Recipes[i].Name, " ", "-"))
-        second := strings.ToLower(replace(cfg.recipes.Recipes[j].Name, " ", "-"))
+        first := replaceAndLower(cfg.recipes.Recipes[i].Name, " ", "-")
+        second := replaceAndLower(cfg.recipes.Recipes[j].Name, " ", "-")
         return first < second
     })
 
@@ -343,6 +342,56 @@ func (cfg *apiConfig) deleteRecipeHandler(w http.ResponseWriter, r *http.Request
 }
 
 func (cfg *apiConfig) editRecipeHandler(w http.ResponseWriter, r *http.Request) {
-    // oldRecipeName := r.PathValue("recipe")
+    oldRecipeName := r.PathValue("recipe")
+
+    decoder := json.NewDecoder(r.Body)
+    newRecipe := &Recipe{}
+    err := decoder.Decode(newRecipe)
+    if err != nil {
+        respondWithError(
+            w,
+            http.StatusBadRequest,
+            "error decoding JSON of new recipe.",
+            err,
+        )
+        return
+    }
+
+    if newRecipe.Name == "" {
+        respondWithError(
+            w,
+            http.StatusBadRequest,
+            "empty recipe submission",
+            nil,
+        )
+        return
+    }
+
+    cfg.recipes.remove(oldRecipeName)
+    ok := cfg.recipes.append(*newRecipe)
+    if !ok {
+        respondWithError(
+            w,
+            http.StatusBadRequest,
+            fmt.Sprintf("failed to update to recipe %s", newRecipe.Name),
+            nil,
+        )
+        return
+    }
+
+    err = cfg.resetHTML()
+    if err != nil {
+        respondWithError(
+            w,
+            http.StatusInternalServerError,
+            "unable to reset HTML",
+            err,
+        )
+        return
+    }
+
+    fmt.Println("Updated recipe:", *newRecipe)
+
+    respondWithJSON(w, http.StatusCreated, newRecipe)
 }
 

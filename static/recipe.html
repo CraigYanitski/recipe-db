@@ -14,24 +14,24 @@
         <h1 id="recipe-name">{{ .Name }}</h1>
         <form class="recipe-links" id="recipe-link-form">
             <input type="button" onclick="window.location.href='/'" class="button-link" value="Home"/>
-            <span style="flex-grow: 1;">&nbsp;</span>
-            <input type="button" onclick="editRecipe()" class="button-link" value="Edit"/>
-            <span style="flex-grow: 1;">&nbsp;</span>
+            <span class="button-link-spacer">&nbsp;</span>
+            <input type="button" onclick="toggleEditRecipe()" class="button-link" value="Edit"/>
+            <span class="button-link-spacer">&nbsp;</span>
             <input type="button" onclick="deleteRecipe()" class="button-link" value="Delete"/>
         </form>
-        <p><i>Total cook time approx. {{ .CookTime }} minutes</i></p>
+        <p><i>Total cook time approx. <span id="cook-time-value">{{ .CookTime }}</span> minutes</i></p>
     </div>
 
-    <div class="recipe-list">
-        <dl>
+    <div id="recipe-list" class="recipe-list" style="display: grid;">
+        <dl id="recipe">
             <dt id="ingredients-term">Ingredients:</dt>
-            <dd id="ingredients-definition"><ul>
+            <dd id="ingredients-definition"><ul id="ingredient-list">
             {{ range .Ingredients }}
                 <li>{{ . }}</li>
             {{ end }}
             </ul></dd>
             <dt id="instructions-term">Instructions:</dt>
-            <dd id="instructions-definition"><ul>
+            <dd id="instructions-definition"><ul id="instruction-list">
             {{ range .Instructions }}
                 <li>{{ . }}</li>
             {{ end }}
@@ -39,6 +39,11 @@
             <dt id="cook-time-term">Cook time:</dt>
             <dd id="cook-time-definition"><i>approx. {{ .CookTime }} minutes</i></dd>
         </dl>
+    </div>
+
+    <div id="edit-recipe-form" class="edit-recipe-form" style="display: none;">
+        <h2>Edit Recipe</h2>
+        <form id="edit-recipe"></form>
     </div>
 </body>
 
