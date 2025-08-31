@@ -13,15 +13,18 @@
     <div class="title">
         <h1>{{ .Recipes | len }} Available Recipes</h1>
         <form class="recipe-links" id="recipe-link-form">
-            <button type="home" onclick="window.location.href='/'" class="button-link">Reload</button>
-            <span style="flex-grow: 1;">&nbsp;</span>
+            <button type="home" onclick="window.location.reload()" class="button-link">Reload</button>
+            <span class="button-link-spacer">&nbsp;</span>
+            <span class="button-link-spacer" style="flex-grow: 1;">&nbsp;</span>
+            <span class="button-link-spacer">&nbsp;</span>
+            <span class="button-link-spacer" style="flex-grow: 1;">&nbsp;</span>
         </form>
     </div>
 
     <div class="recipe-list">
         <dl id="recipe-times">
         {{ range .Recipes }}
-            <dt><a href={{ replace .Name " " "-" | lower }}>{{ .Name }}</a></dt>
+            <dt><a href={{ replace .Name " " "-" }}>{{ .Name }}</a></dt>
             <dd>(<i>{{ .CookTime }} minutes</i>)</dd>
         {{ end }}
         </dl>
