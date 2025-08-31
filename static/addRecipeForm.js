@@ -131,11 +131,11 @@ window.addEventListener("DOMContentLoaded", function() {
 
         submitRecipe(newRecipe)
             .then(data => {
-                setNotification(`Recipe ${newRecipe.name} created!`, "green");
+                setNotification(`Recipe ${newRecipe.name} created!`, "#013221");
                 console.log(data);
             })
             .catch(error => {
-                setNotification(`Failed to create recipe...`, "red");
+                setNotification(`Failed to create recipe...`, "#660001");
                 console.error(error);
             });
     });
