@@ -37,3 +37,12 @@ Development
 
 Feel free to use the code as you wish, but this is really a personal project and you can probably come up with 
 better implementations of it starting from scratch.
+
+The state of this project at the moment is rather RESTful, since you are able to create, edit, and delete 
+recipes from the frontend.
+However there is some formatting I want to fix in how the recipes are displayed, specifically allowing 
+sections and notes in the recipe instructions.
+I intend to keep all instructions in a <ul/> block for simplicity, but just format the <li/> 
+when I want a section/note.
+This should be finished in a week.
+
