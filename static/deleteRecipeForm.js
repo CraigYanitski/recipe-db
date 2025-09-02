@@ -67,6 +67,14 @@ function toggleEditRecipe() {
     }
 }
 
+function isHeader(input) {
+    return (input[0] == "(") && (input[input.length-1] == ")");
+}
+
+function isNote(input) {
+    return (input[0] == "!");
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const recipeLinks = document.getElementById("recipe-link-form");
 
@@ -167,8 +175,23 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     for (var ingredient of currentIngredients) {
-        ingredients.push(ingredient.innerHTML.trim());
-        addIngredientInput(ingredient.innerHTML.trim());
+        line = ingredient.innerHTML.trim();
+        ingredients.push(line);
+        addIngredientInput(line);
+        if (isHeader(line)) {
+            ingredient.innerHTML = "";
+            ingredient.style.listStyleType = "none";
+            head = document.createElement("h6");
+            head.innerHTML = line.slice(1, -1);
+            ingredient.appendChild(head);
+        } else if (isNote(line)) {
+            ingredient.innerHTML = "";
+            ingredient.style.listStyleType = "none";
+            note = document.createElement("div");
+            note.className = "note";
+            note.innerHTML = line.slice(1);
+            ingredient.appendChild(note);
+        }
     }
     addIngredientButton.addEventListener("click", () => {addIngredientInput("")})
 
@@ -189,8 +212,23 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     for (var instruction of currentInstructions) {
-        instructions.push(instruction.innerHTML.trim());
-        addInstructionInput(instruction.innerHTML.trim());
+        line = instruction.innerHTML.trim();
+        instructions.push(line);
+        addInstructionInput(line);
+        if (isHeader(line)) {
+            instruction.innerHTML = "";
+            instruction.style.listStyleType = "none";
+            head = document.createElement("h6");
+            head.innerHTML = line.slice(1, -1);
+            instruction.appendChild(head);
+        } else if (isNote(line)) {
+            instruction.innerHTML = "";
+            instruction.style.listStyleType = "none";
+            note = document.createElement("div");
+            note.className = "note";
+            note.innerHTML = line.slice(1);
+            instruction.appendChild(note);
+        }
     }
     addInstructionButton.addEventListener("click", () => {addInstructionInput("")})
 
