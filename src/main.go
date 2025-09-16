@@ -153,6 +153,33 @@ func copyFile(src, dst string) error {
     return nil
 }
 
+func copyDir(src, dst string) error {
+    // This currently ignores nested directories
+    srcInfo, err := os.Stat(src)
+    if err != nil {
+        return err
+    }
+    err = os.MkdirAll(dst, srcInfo.Mode())
+    if err != nil {
+        return err
+    }
+    files, err := os.ReadDir(src)
+    if err != nil {
+        return err
+    }
+    for _, file := range files {
+        srcFile := filepath.Join(src, file.Name())
+        dstFile := filepath.Join(dst, file.Name())
+        if !file.IsDir() {
+            err = copyFile(srcFile, dstFile)
+            if err != nil {
+                return err
+            }
+        }
+    }
+    return nil
+}
+
 func (cfg apiConfig) writeHTML() error {
     // copy static files
     err := copyFile("./static/addRecipeForm.js", "./public/addRecipeForm.js")
@@ -166,6 +193,11 @@ func (cfg apiConfig) writeHTML() error {
     }
 
     err = copyFile("./static/index.css", "./public/index.css")
+    if err != nil {
+        panic(err)
+    }
+    
+    err = copyDir("./static/images/favicon", "./public/images")
     if err != nil {
         panic(err)
     }
