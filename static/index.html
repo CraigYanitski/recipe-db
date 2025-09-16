@@ -24,9 +24,50 @@
             <span class="button-link-spacer">&nbsp;</span>
             <span class="button-link-spacer" style="flex-grow: 1;">&nbsp;</span>
         </form>
+        <div class="explanation">
+            <div class="explanation" style="margin-top: 0px;">
+            This is a growing list containing all of your recipes that have been digitised. 
+            You may add a new recipe using the form at the bottom of the page. 
+            </div>
+
+            <div class="explanation" style="margin-bottom: 0px;">
+            The options that are absolutely required are the <i>Recipe Name</i> 
+            and the <i>Creation Time</i>, which should be the <emph>number of minutes</emph> it takes to
+            create the dish (prep time + cook time + chill time).
+            </div>
+            <div class="explanation" style="margin-top: 0px;">
+            The <i>Ingredients</i> and <i>Instructions</i> lists are optional, and will be displayed as bullet points.
+            </div>
+
+            <div class="explanation" style="margin-bottom: 0px;">
+            There are two formatting options when adding ingredients or instructions that do not use bullet points: 
+            section titles and notes.
+            If you surround the text in parentheses, for example <code>(Section)</code>, it is rendered as,
+            </div>
+            <div class="explanation" style="margin-top: 0px;">
+            <h6>Section</h6>
+            </div>
+
+            <div class="explanation" style="margin-bottom: 0px;">
+            Likewise, if you can create a note if you begin the text with an exclamation point, 
+            for example <code>!This is a note!</code>, which is rendered as,
+            </div>
+            <div class="note">This is a note!</div>
+
+            <div class="explanation">
+            And in case you make a mistake or want to add more information to your recipes,
+            there is also an option to edit them individually.
+            In that case, you might need to refresh that recipe's webpage for it to get the edited version.
+            </div>
+
+            <div class="explanation">
+            Otherwise, enjoy your recipes!
+            </div>
+        </div>
     </div>
 
     <div class="recipe-list">
+        <h2>Recipe List</h2>
         <dl id="recipe-times">
         {{ range .Recipes }}
             <dt><a href={{ replace .Name " " "-" }}>{{ .Name }}</a></dt>
@@ -65,8 +106,8 @@
                 </button>
             </div>
             <div class="form-group">
-                <label for="recipe-cooktime">Creation time</label>
-                <input type="number" id="recipe-cooktime" placeholder="Total creation time in minutes" required/>
+                <label for="recipe-cooktime">Creation time (prep + cook + chill time)</label>
+                <input type="number" id="recipe-cooktime" placeholder="Number of minutes" required/>
             </div>
             <button type="submit" class="submit-button">Add Recipe</button>
         </form>

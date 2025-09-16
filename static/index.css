@@ -20,7 +20,6 @@ h2,
 h3,
 h4,
 h5 {
-    color: #002395;
     color: #324ab2;
     margin-top: 16px;
     margin-bottom: 16px;
@@ -32,6 +31,7 @@ h1 {
 
 h2,
 h3 {
+    color: #c37ce0;
     font-size: 30px;
 }
 
@@ -45,7 +45,7 @@ h6 {
 }
 
 .note {
-    background: #b18517;
+    background: #e1b547;
     color: #444;
     margin: 5px;
     padding: 5px;
@@ -93,6 +93,10 @@ p {
 
 }
 
+code {
+    background-color: #333333;
+}
+
 blockquote {
     background-color: #242424;
     border-left: 4px solid #30363d;
@@ -102,6 +106,11 @@ blockquote {
     padding-bottom: 0.5em;
     padding-right: 0.5em;
     color: #8b949e;
+}
+
+.explanation {
+    margin: 16px;
+    margin-top: 32px;
 }
 
 img {
